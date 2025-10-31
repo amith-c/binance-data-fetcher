@@ -1,0 +1,1 @@
+from .binance_fetcher import fetch_candlestick_data
