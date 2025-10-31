@@ -120,15 +120,26 @@ def fetch_candlestick_data(
             return requested_data
         else:
             # Fetch missing data
-            fetch_start = missing_timestamps.min()
-            fetch_end = missing_timestamps.max()
-            new_data = _download_candlestick_data(symbol, timeframe, fetch_start, fetch_end)
-            if new_data is not None:
-                combined_df = pd.concat([main_cache, new_data]).sort_index().drop_duplicates()
-                combined_df.to_parquet(cache_file)
-                return combined_df[(combined_df.index >= start_time) & (combined_df.index <= end_time)]
-            else:
-                return requested_data
+            gaps = []
+            if not missing_timestamps.empty:
+                start_gap = missing_timestamps[0]
+                end_gap = missing_timestamps[0]
+                for i in range(1, len(missing_timestamps)):
+                    if missing_timestamps[i] == end_gap + pd.Timedelta(freq=_timeframe_to_pandas_freq(timeframe)):
+                        end_gap = missing_timestamps[i]
+                    else:
+                        gaps.append((start_gap, end_gap))
+                        start_gap = missing_timestamps[i]
+                        end_gap = missing_timestamps[i]
+                gaps.append((start_gap, end_gap))
+
+            for start_gap, end_gap in gaps:
+                new_data = _download_candlestick_data(symbol, timeframe, start_gap, end_gap)
+                if new_data is not None:
+                    main_cache = pd.concat([main_cache, new_data]).sort_index().drop_duplicates()
+
+            main_cache.to_parquet(cache_file)
+            return main_cache[(main_cache.index >= start_time) & (main_cache.index <= end_time)]
     else:
         # Cache does not exist, download all data
         new_data = _download_candlestick_data(symbol, timeframe, start_time, end_time)
