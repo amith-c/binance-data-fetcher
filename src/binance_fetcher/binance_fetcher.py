@@ -129,3 +129,11 @@ def fetch_candlestick_data(
                 return combined_df[(combined_df.index >= start_time) & (combined_df.index <= end_time)]
             else:
                 return requested_data
+    else:
+        # Cache does not exist, download all data
+        new_data = _download_candlestick_data(symbol, timeframe, start_time, end_time)
+        if new_data is not None:
+            new_data.to_parquet(cache_file)
+            return new_data
+        else:
+            return pd.DataFrame()

@@ -10,5 +10,10 @@ dependencies = [
     "pandas",
     "requests",
     "pathlib",
-    "rich"
+    "rich",
+    "fastparquet"
 ]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["binance_fetcher"]

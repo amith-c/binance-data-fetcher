@@ -1,3 +1,5 @@
+LICENSE
+README.md
 pyproject.toml
 src/binance_fetcher/__init__.py
 src/binance_fetcher/binance_fetcher.py
@@ -6,3 +8,4 @@ src/binance_fetcher.egg-info/SOURCES.txt
 src/binance_fetcher.egg-info/dependency_links.txt
 src/binance_fetcher.egg-info/requires.txt
 src/binance_fetcher.egg-info/top_level.txt
+tests/test_binance_fetcher.py
