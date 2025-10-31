@@ -1,0 +1,5 @@
+appdirs
+pandas
+requests
+pathlib
+rich
