@@ -125,7 +125,7 @@ def fetch_candlestick_data(
                 start_gap = missing_timestamps[0]
                 end_gap = missing_timestamps[0]
                 for i in range(1, len(missing_timestamps)):
-                    if missing_timestamps[i] == end_gap + pd.Timedelta(freq=_timeframe_to_pandas_freq(timeframe)):
+                    if missing_timestamps[i] == end_gap + pd.Timedelta(_timeframe_to_pandas_freq(timeframe)):
                         end_gap = missing_timestamps[i]
                     else:
                         gaps.append((start_gap, end_gap))
